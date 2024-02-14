@@ -8,10 +8,9 @@ const adminData = require("./admin");
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-  console.log("I'm static always runs!");
-  //   res.send("<h1>This is Express page</h1>");
-  console.log(adminData.products);
-  res.sendFile(path.join(rootDir, "views", "shop.html"));
+  const products = adminData.products;
+  console.log(products)
+  res.render('shop', {prods: products, docTitle : "dummy shop"})
 });
 
 module.exports = router;
