@@ -7,24 +7,23 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-
-
 app.set('view engine', 'ejs');
 app.set('views', 'views')
 
-const adminData = require("./routes/admin");
+const adminRoutes = require("./routes/admin");
 
 const shopRoutes = require("./routes/shop");
 
+const productsController = require("./controllers/error")
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use("/admin", adminData.routes);
+app.set('view engine', 'pug');
+
+app.use("/admin", adminRoutes);
 
 app.use(shopRoutes);
 
-app.use((req, res, next) => {
-  // res.status(404).sendFile(path.join(__dirname, "views", "404.html"));
-  res.status(404).render('404', {pageTitle : "Title from Ejs"})
-});
+app.use(productsController.get404Page);
 
 app.listen(4000);
