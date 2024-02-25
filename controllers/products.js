@@ -5,6 +5,7 @@ const rootDir = require("../utils/path");
 const Product = require("../models/product");
 
 exports.getAddProduct = (req, res, next) => {
+  console.log("reqqqq", req.user)
   res.sendFile(path.join(rootDir, "views", "add-product.html"));
 };
 
