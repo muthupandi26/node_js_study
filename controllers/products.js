@@ -16,10 +16,16 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    console.log(products);
-    // in a render i didn't map just priniting 1st one value
-    res.render("shop", { prods: products, docTitle: "dummy shop" });
-  });
+  Product.fetchAll()
+    .then(products => {
+      res.render('shop/index', {
+        prods: products,
+        pageTitle: 'Shop',
+        path: '/'
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
   // res.sendFile(path.join(rootDir, "views", "shop.html"));
 };
