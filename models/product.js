@@ -1,44 +1,63 @@
-// const products = [];
-const fs = require("fs");
-const path = require("path");
+const getDb = require("../utils/database").getDb;
+const { ObjectId } = require("mongodb");
 
-module.exports = class Product {
-  constructor(t) {
-    this.title = t;
+class Product {
+  constructor(title, price, description, imageUrl) {
+    this.title = title;
+    this.imageUrl = imageUrl;
+    this.price = price;
+    this.description = description;
   }
 
   save() {
-    const p = path.join(
-      path.dirname(require.main.filename),
-      "data",
-      "products.json"
-    );
-    console.log(p, "pathhhh");
-
-    fs.readFile(p, (err, fileContent) => {
-      console.log(err, fileContent);
-      let products = [];
-      if (!err) {
-        products = JSON.parse(fileContent);
-      }
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), (err) => {
+    const db = getDb();
+    return db
+      .collection("products")
+      .insertOne(this)
+      .then((result) => console.log(result))
+      .catch((err) => {
         console.log(err);
       });
-    });
   }
 
-  static fetchAll(cb) {
-    const p = path.join(
-      path.dirname(require.main.filename),
-      "data",
-      "products.json"
-    );
-    fs.readFile(p, (err, fileContent) => {
-      if (err) {
-        cb([]);
-      }
-      cb(JSON.parse(fileContent));
-    });
+  static fetchAll() {
+    const db = getDb();
+    return db
+      .collection("products")
+      .find()
+      .toArray()
+      .then((products) => {
+        console.log(products);
+        return products;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
-};
+
+  static findById(prodId) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .find({ _id: new ObjectId(prodId) })
+      .next()
+      .then((product) => {
+        console.log(product);
+        return product;
+      })
+      .catch((err) => console.log(err));
+  }
+
+  static deleteById(prodId) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .deleteOne({ _id: new ObjectId(prodId) })
+      .then((result) => console.log("Deleted"))
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+}
+
+module.exports = Product;
