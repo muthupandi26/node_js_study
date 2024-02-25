@@ -9,3 +9,24 @@ exports.getProduct = (req, res, next) => {
     })
     .catch((error) => console.log(error));
 };
+
+exports.getProducts = (req, res, next) => {
+  Product.fetchAll()
+    .then(products => {
+      res.render('shop/product-list', {
+        prods: products,
+        pageTitle: 'All Products',
+        path: '/products'
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+exports.postCart =  (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.findById(prodId).then(product => {
+    return req.user.addToCart(product)
+  }).then(result => console.log(result))
+}
