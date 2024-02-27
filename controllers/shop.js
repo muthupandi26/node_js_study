@@ -27,6 +27,22 @@ exports.getProducts = (req, res, next) => {
 exports.postCart =  (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId).then(product => {
-    return req.user.addToCart(product)
-  }).then(result => console.log(result))
+    return req.user.addToCart(product);
+  }).then(result => {
+    console.log(result)
+    res.redirect('/cart')
+  })
+}
+
+exports.getCart = (req, res, next) => {
+  req.user
+    .getCart()  
+    .then(products => {
+      res.render('shop/cart', {
+        path: '/cart',
+        pageTitle: 'Your Cart',
+        products: products
+      })
+    })
+    .catch(err => console.log(err))
 }
