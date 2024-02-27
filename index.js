@@ -33,3 +33,5 @@ app.listen(4000);
 mongoConnect(() => {
   app.listen(3000);
 });
+
+console.log("checking")
