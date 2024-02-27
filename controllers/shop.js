@@ -46,3 +46,13 @@ exports.getCart = (req, res, next) => {
     })
     .catch(err => console.log(err))
 }
+
+exports.postCartDeleteProduct = (req, res,next) => {
+  const prodId = req.body.productId;
+  req.user
+    .deleteItemFromCard(prodId)
+    .then(result => {
+      res.redirect('/cart')
+    })
+    .catch(err => console.log(err))
+}
