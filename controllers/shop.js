@@ -64,5 +64,18 @@ exports.postOrder = (req, res, next) => {
     .then(result => {
       res.redirect('/orders')
     })
-    .catch(err => console.log(err))
+    .catch(err => console.log(err, "heyErrr"))
+}
+
+exports.getOrders = (req, res, next) => {
+  req.user
+    .getOrders()
+      .then(orders => {
+        res.render('shop/orders', {
+          path: "/orders",
+          pageTitle: 'Your orders',
+          orders: orders
+        })
+      })
+      .catch(err=> console.log(err))
 }
